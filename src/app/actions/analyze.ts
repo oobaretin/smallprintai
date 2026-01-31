@@ -133,6 +133,13 @@ export type FullAnalysisResult = z.infer<typeof fullAnalysisSchema>;
 export async function analyzeDocumentWithAI(
   formData: FormData
 ): Promise<FullAnalysisResult> {
+  const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
+  if (!apiKey) {
+    throw new Error(
+      "ANTHROPIC_API_KEY is not set. Add it to .env.local (and Vercel env vars for production)."
+    );
+  }
+
   const extractResult = await analyzeDocument(formData);
   if (!extractResult.ok) {
     throw new Error(extractResult.error);

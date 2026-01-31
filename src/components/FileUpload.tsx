@@ -53,7 +53,9 @@ export function FileUpload({
       onAnalysisComplete(result);
       toast.success("Analysis complete!");
     } catch (error) {
-      toast.error("Error processing document");
+      const message =
+        error instanceof Error ? error.message : "Error processing document";
+      toast.error(message);
       console.error(error);
     } finally {
       setIsUploading(false);
