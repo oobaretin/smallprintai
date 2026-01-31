@@ -24,6 +24,8 @@ const geistMono = Geist_Mono({
 const playfairDisplay = Playfair_Display({
   variable: "--font-serif",
   subsets: ["latin"],
+  display: "swap",
+  preload: false, // avoids "preloaded but not used" warning when serif is used below the fold
 });
 
 export const metadata: Metadata = {

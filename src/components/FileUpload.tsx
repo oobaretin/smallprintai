@@ -40,6 +40,8 @@ export function FileUpload({
     },
     maxSize: MAX_SIZE_MB * 1024 * 1024,
     multiple: false,
+    noDrag: false,
+    preventDropOnDocument: true,
   });
 
   const handleUpload = async () => {
@@ -62,16 +64,30 @@ export function FileUpload({
     }
   };
 
+  const rootProps = getRootProps();
+
   return (
     <div className={cn("w-full max-w-2xl mx-auto p-4", className)}>
       <div
-        {...getRootProps()}
+        {...rootProps}
         className={cn(
           "border-2 border-dashed rounded-2xl p-10 transition-all cursor-pointer flex flex-col items-center justify-center min-h-[200px]",
           isDragActive
             ? "border-blue-500 bg-blue-500/5"
             : "border-slate-700 hover:border-slate-500 bg-slate-900/50"
         )}
+        onDragOver={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (e.dataTransfer) e.dataTransfer.dropEffect = "copy";
+          rootProps.onDragOver?.(e);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          rootProps.onDrop?.(e);
+        }}
+        style={{ pointerEvents: "auto", ...rootProps.style }}
       >
         <input {...getInputProps()} aria-describedby="upload-hint" />
         <div className="bg-slate-800 p-4 rounded-full mb-4 text-blue-400">
