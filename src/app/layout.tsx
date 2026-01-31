@@ -40,9 +40,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const body = (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased`}
+        suppressHydrationWarning
       >
         {children}
         <Toaster richColors position="top-center" />
