@@ -2,62 +2,60 @@ import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono, Playfair_Display } from "next/font/google";
 import { Toaster } from "sonner";
-import { ClerkErrorBoundary } from "@/components/clerk-error-boundary";
 import "./globals.css";
 
-const clerkPubKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
-const isClerkConfigured =
-  !!clerkPubKey &&
-  clerkPubKey !== "your_clerk_pub_key" &&
-  (clerkPubKey.startsWith("pk_test_") || clerkPubKey.startsWith("pk_live_"));
-
+// 1. Safe Font Setup - Simplified to remove common Next.js build errors
 const geistSans = Geist({
-  variable: "--font-geist-sans",
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
 const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
+  variable: "--font-mono",
 });
 
-const playfairDisplay = Playfair_Display({
-  variable: "--font-serif",
+const playfair = Playfair_Display({
   subsets: ["latin"],
-  display: "swap",
-  preload: false, // avoids "preloaded but not used" warning when serif is used below the fold
+  variable: "--font-serif",
 });
+
+// 2. Safe Clerk Check - Uses "Optional Chaining" (?.) to stop the red lines
+const clerkPubKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+const isClerkConfigured = !!(
+  clerkPubKey && 
+  clerkPubKey.length > 0 && 
+  (clerkPubKey.startsWith("pk_test_") || clerkPubKey.startsWith("pk_live_"))
+);
 
 export const metadata: Metadata = {
   title: "SmallPrintAI — Understand the small print before you sign",
-  description:
-    "Analyze contracts and documents for key terms, dates, and obligations. Legal clarity in minutes.",
+  description: "Analyze contracts and documents for legal clarity in minutes.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  const body = (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased`}
-        suppressHydrationWarning
-      >
+}) {
+  // We define the base HTML structure here
+  const content = (
+    <html lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} font-sans antialiased`}>
         {children}
         <Toaster richColors position="top-center" />
       </body>
     </html>
   );
 
-  return isClerkConfigured ? (
-    <ClerkErrorBoundary fallback={body}>
-      <ClerkProvider>
-        {body}
+  // 3. Conditional Wrap - Only use Clerk if the key is actually present
+  if (isClerkConfigured) {
+    return (
+      <ClerkProvider publishableKey={clerkPubKey}>
+        {content}
       </ClerkProvider>
-    </ClerkErrorBoundary>
-  ) : (
-    body
-  );
+    );
+  }
+
+  return content;
 }
