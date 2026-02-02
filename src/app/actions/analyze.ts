@@ -9,14 +9,6 @@ const anthropic = createAnthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? "",
 });
 
-// A lightweight, zero-dependency helper to grab text from simple PDFs
-async function extractText(buffer: Buffer): Promise<string> {
-  const content = buffer.toString("utf-8");
-  // Simple regex to pull text between PDF markers - works for most standard PDFs
-  const text = content.replace(/[^\x20-\x7E\n]/g, " "); 
-  return text.slice(0, 20000); 
-}
-
 const fullAnalysisSchema = z.object({
   summary: z.string(),
   riskScore: z.number(),
@@ -38,37 +30,36 @@ const fullAnalysisSchema = z.object({
   ),
 });
 
-export async function analyzeDocumentWithAI(formData: FormData) {
-  try {
-    const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
-    if (!apiKey) throw new Error("ANTHROPIC_API_KEY is missing in Vercel.");
+export type FullAnalysisResult = z.infer<typeof fullAnalysisSchema>;
 
+export async function analyzeDocumentWithAI(formData: FormData): Promise<FullAnalysisResult> {
+  try {
     const file = formData.get("file") as File | null;
     if (!file) throw new Error("No file uploaded.");
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    
-    // Using a more reliable way to get text for Serverless
-    const { PDFParse } = await import("pdf-parse/lib/pdf-parse.js");
-    const data = await PDFParse(buffer);
+
+    // This is the specific fix for the squiggly line/Vercel crash
+    // We use a standard require inside the server action
+    const pdf = require("pdf-parse");
+    const data = await pdf(buffer);
     const extractedText = data.text;
 
     if (!extractedText || extractedText.trim().length < 10) {
-      throw new Error("Could not read document. Is it a scanned image?");
+      throw new Error("Could not extract text. Try a different PDF.");
     }
 
     const { object } = await generateObject({
       model: anthropic("claude-3-5-sonnet-latest"),
       schema: fullAnalysisSchema,
       system: LEGAL_ANALYZER_PROMPT,
-      prompt: `Analyze this text:\n\n${extractedText.slice(0, 15000)}`,
+      prompt: `Analyze this document text:\n\n${extractedText.slice(0, 15000)}`,
     });
 
-    return object;
+    return object as FullAnalysisResult;
   } catch (error: any) {
-    console.error("ANALYSIS_ERROR:", error.message);
-    // This allows the error to show up in your UI instead of a generic Digest error
-    throw new Error(error.message || "Failed to analyze document.");
+    console.error("Server Action Error:", error);
+    throw new Error(error.message || "Analysis failed.");
   }
 }
