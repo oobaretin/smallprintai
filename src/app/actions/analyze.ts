@@ -4,39 +4,12 @@ import { generateObject } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { z } from "zod";
 import { LEGAL_ANALYZER_PROMPT } from "@/lib/prompts";
+// Use standard import now that we fixed next.config
+import pdf from "pdf-parse";
 
-// 1. Updated model name to the standard stable version
 const anthropic = createAnthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? "",
 });
-
-/**
- * Simplified PDF extraction using a more stable approach for Vercel.
- */
-async function extractTextFromPdf(buffer: Buffer): Promise<string> {
-  try {
-    const pdf = await import("pdf-parse/lib/pdf-parse.js");
-    const data = await pdf.default(buffer);
-    return data.text || "";
-  } catch (error) {
-    console.error("PDF extraction error:", error);
-    return "";
-  }
-}
-
-/**
- * Simplified Office extraction.
- */
-async function extractTextFromOffice(buffer: Buffer): Promise<string> {
-  try {
-    const OfficeParser = await import("officeparser");
-    const text = await OfficeParser.parseOffice(buffer);
-    return typeof text === "string" ? text : "";
-  } catch (error) {
-    console.error("Office extraction error:", error);
-    return "";
-  }
-}
 
 const fullAnalysisSchema = z.object({
   summary: z.string(),
@@ -59,46 +32,37 @@ const fullAnalysisSchema = z.object({
   ),
 });
 
-export type FullAnalysisResult = z.infer<typeof fullAnalysisSchema>;
-
-export async function analyzeDocumentWithAI(
-  formData: FormData
-): Promise<FullAnalysisResult> {
+export async function analyzeDocumentWithAI(formData: FormData) {
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
-  
-  if (!apiKey) {
-    throw new Error("Missing ANTHROPIC_API_KEY. Please add it to Vercel variables.");
-  }
+  if (!apiKey) throw new Error("ANTHROPIC_API_KEY is missing in Vercel.");
 
   const file = formData.get("file") as File | null;
-  if (!file) throw new Error("No file uploaded.");
+  if (!file) throw new Error("No file selected.");
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
+  const buffer = Buffer.from(await file.arrayBuffer());
   let extractedText = "";
 
-  const name = file.name.toLowerCase();
+  try {
+    if (file.name.toLowerCase().endsWith(".pdf")) {
+      const data = await pdf(buffer);
+      extractedText = data.text;
+    } else {
+      // For now, let's focus on getting PDF working 100%
+      throw new Error("Please upload a PDF for this test.");
+    }
 
-  // Route extraction based on file type
-  if (name.endsWith(".pdf")) {
-    extractedText = await extractTextFromPdf(buffer);
-  } else if (name.endsWith(".docx") || name.endsWith(".doc")) {
-    extractedText = await extractTextFromOffice(buffer);
-  } else {
-    throw new Error("Unsupported format. Use PDF or DOCX.");
+    if (!extractedText.trim()) throw new Error("Could not extract text.");
+
+    const { object } = await generateObject({
+      model: anthropic("claude-3-5-sonnet-latest"),
+      schema: fullAnalysisSchema,
+      system: LEGAL_ANALYZER_PROMPT,
+      prompt: `Analyze this document:\n\n${extractedText.slice(0, 15000)}`,
+    });
+
+    return object;
+  } catch (error: any) {
+    console.error("Analysis Error:", error);
+    throw new Error(error.message || "Server Error during analysis");
   }
-
-  if (!extractedText.trim()) {
-    throw new Error("Could not read text from file. Is the document empty or encrypted?");
-  }
-
-  // 2. Using the widely supported model name 'claude-3-5-sonnet-latest'
-  const { object } = await generateObject({
-    model: anthropic("claude-3-5-sonnet-latest"),
-    schema: fullAnalysisSchema,
-    system: LEGAL_ANALYZER_PROMPT,
-    prompt: `Analyze the following document text:\n\n${extractedText.slice(0, 15000)}`,
-  });
-
-  return object;
 }
