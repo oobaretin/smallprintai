@@ -1,5 +1,6 @@
 "use server";
 
+import { createRequire } from "node:module";
 import { generateObject, streamText } from "ai";
 import { zodSchema } from "ai";
 import { createAnthropic } from "@ai-sdk/anthropic";
@@ -7,17 +8,19 @@ import OfficeParser from "officeparser";
 import { z } from "zod";
 import { LEGAL_ANALYZER_PROMPT } from "@/lib/prompts";
 
+const require = createRequire(import.meta.url);
+
 const anthropic = createAnthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? "",
 });
 
 /**
- * Extracts text from a PDF buffer. Uses pdf-parse (PDFParse class) in Node runtime.
+ * Extracts text from a PDF buffer. Uses require("pdf-parse") for stable server load (avoids ESM/dynamic-import crash).
  * Falls back to empty string if parsing fails (e.g. in Edge or missing deps).
  */
 async function extractTextFromPdf(buffer: Buffer): Promise<string> {
   try {
-    const { PDFParse } = await import("pdf-parse");
+    const { PDFParse } = require("pdf-parse") as { PDFParse: new (opts: { data: Uint8Array }) => { getText(): Promise<{ text?: string }>; destroy(): Promise<void> } };
     const parser = new PDFParse({ data: new Uint8Array(buffer) });
     const result = await parser.getText();
     await parser.destroy();
