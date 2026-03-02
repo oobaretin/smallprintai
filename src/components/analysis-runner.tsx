@@ -43,16 +43,18 @@ export function AnalysisRunner({
 
   useEffect(() => {
     if (!documentText.trim()) return;
-    setParsed(null);
-    setParseError(null);
-    setCompletion("");
+    queueMicrotask(() => {
+      setParsed(null);
+      setParseError(null);
+      setCompletion("");
+    });
     analysisStartRef.current = logAnalysisStart();
     complete("Analyze this document.");
   }, [documentText]); // eslint-disable-line react-hooks/exhaustive-deps -- run when documentText is set
 
   useEffect(() => {
     if (error) {
-      setParseError(error.message);
+      queueMicrotask(() => setParseError(error.message));
       toast.error("Analysis failed. Please try again.");
       return;
     }
@@ -68,7 +70,7 @@ export function AnalysisRunner({
       const jsonStr = raw.replace(/^```json\s*|\s*```$/g, "").trim();
       const data = JSON.parse(jsonStr) as Record<string, unknown>;
       if (!data || typeof data.summary !== "string") {
-        setParseError("Invalid analysis format.");
+        queueMicrotask(() => setParseError("Invalid analysis format."));
         return;
       }
       const analysis: LegalAnalysis = {
@@ -101,11 +103,13 @@ export function AnalysisRunner({
           : [],
         risks: Array.isArray(data.risks) ? (data.risks as LegalAnalysis["risks"]) : [],
       };
-      setParsed(analysis);
-      setParseError(null);
+      queueMicrotask(() => {
+        setParsed(analysis);
+        setParseError(null);
+      });
       toast.success("Legal analysis ready.");
     } catch {
-      setParseError("Could not parse analysis response.");
+      queueMicrotask(() => setParseError("Could not parse analysis response."));
       toast.error("Analysis failed. Please try again.");
     }
   }, [isLoading, completion, error]);

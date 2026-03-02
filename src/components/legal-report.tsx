@@ -68,7 +68,7 @@ export function LegalReport({
   const [negotiationDraft, setNegotiationDraft] =
     useState<NegotiationDraft | null>(null);
   const [negotiationClauseTitle, setNegotiationClauseTitle] = useState("");
-  const [negotiationLoading, setNegotiationLoading] = useState(false);
+  const [, setNegotiationLoading] = useState(false);
 
   const handleNegotiate = useCallback(
     async (title: string, description: string) => {

@@ -1,6 +1,5 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
 const clerkPubKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
 const isClerkConfigured =
@@ -14,7 +13,7 @@ const isClerkConfigured =
  */
 export default isClerkConfigured
   ? clerkMiddleware()
-  : function passThrough(_req: NextRequest) {
+  : function passThrough() {
       return NextResponse.next();
     };
 

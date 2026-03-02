@@ -52,8 +52,12 @@ export function FileUpload({
 
     try {
       const result = await analyzeDocumentWithAI(formData);
-      onAnalysisComplete(result);
-      toast.success("Analysis complete!");
+      if (result.ok) {
+        onAnalysisComplete(result.data);
+        toast.success("Analysis complete!");
+      } else {
+        toast.error(result.error);
+      }
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Error processing document";

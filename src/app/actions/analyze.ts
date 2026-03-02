@@ -126,37 +126,54 @@ const fullAnalysisSchema = z.object({
 
 export type FullAnalysisResult = z.infer<typeof fullAnalysisSchema>;
 
+export type AnalyzeWithAIResult =
+  | { ok: true; data: FullAnalysisResult }
+  | { ok: false; error: string };
+
 /**
  * Server Action: extract text from uploaded file (PDF/DOCX) and run AI analysis in one call.
- * Returns structured analysis (summary, riskScore, assessments, milestones) for the home-page flow.
+ * Returns structured analysis or a user-safe error (avoids 500 in production).
  */
 export async function analyzeDocumentWithAI(
   formData: FormData
-): Promise<FullAnalysisResult> {
+): Promise<AnalyzeWithAIResult> {
   const apiKey = process.env.ANTHROPIC_API_KEY?.trim();
   if (!apiKey) {
-    throw new Error(
-      "ANTHROPIC_API_KEY is not set. Add it to .env.local (and Vercel env vars for production)."
-    );
+    return {
+      ok: false,
+      error:
+        "Analysis is not configured. Add ANTHROPIC_API_KEY in Vercel (or .env.local) and redeploy.",
+    };
   }
 
   const extractResult = await analyzeDocument(formData);
   if (!extractResult.ok) {
-    throw new Error(extractResult.error);
+    return { ok: false, error: extractResult.error };
   }
 
-  const { object } = await generateObject({
-    model: anthropic("claude-sonnet-4-20250514"),
-    schema: zodSchema(fullAnalysisSchema),
-    schemaName: "LegalAnalysis",
-    schemaDescription:
-      "Structured legal document analysis with risk assessments and milestones",
-    system: LEGAL_ANALYZER_PROMPT,
-    prompt: `Analyze the following document text:\n\n${extractResult.extractedText.slice(0, 12000)}`,
-    maxOutputTokens: 2048,
-  });
-
-  return object;
+  try {
+    const { object } = await generateObject({
+      model: anthropic("claude-sonnet-4-20250514"),
+      schema: zodSchema(fullAnalysisSchema),
+      schemaName: "LegalAnalysis",
+      schemaDescription:
+        "Structured legal document analysis with risk assessments and milestones",
+      system: LEGAL_ANALYZER_PROMPT,
+      prompt: `Analyze the following document text:\n\n${extractResult.extractedText.slice(0, 12000)}`,
+      maxOutputTokens: 2048,
+    });
+    return { ok: true, data: object };
+  } catch (err) {
+    const message =
+      err instanceof Error ? err.message : "Analysis failed.";
+    return {
+      ok: false,
+      error:
+        message.includes("API key") || message.includes("401")
+          ? "Invalid API key. Check ANTHROPIC_API_KEY in Vercel (or .env.local)."
+          : "Analysis failed. Please try again or use a shorter document.",
+    };
+  }
 }
 
 /**
