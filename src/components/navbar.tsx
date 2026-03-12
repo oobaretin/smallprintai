@@ -63,7 +63,7 @@ function ClerkNavActions() {
 }
 
 /**
- * SmallPrintAI Navbar: logo (serif), auth via Clerk (SignedIn/SignedOut) or static links when Clerk unavailable.
+ * SmallPrintsAI Navbar: logo (serif), auth via Clerk (SignedIn/SignedOut) or static links when Clerk unavailable.
  */
 export function Navbar() {
   const useClerk = isClerkConfigured();
@@ -73,7 +73,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-2xl font-serif font-bold tracking-tight text-slate-900">
-            SmallPrint AI
+            SmallPrintsAI
           </span>
         </Link>
 

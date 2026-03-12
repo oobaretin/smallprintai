@@ -33,7 +33,7 @@ export default function DashboardPage() {
             Back
           </Link>
           <span className="text-sm font-semibold text-[var(--foreground)]">
-            SmallPrintAI
+            SmallPrintsAI
           </span>
           <span className="w-20" aria-hidden />
         </div>

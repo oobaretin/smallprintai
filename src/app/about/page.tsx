@@ -35,7 +35,7 @@ export default function AboutPage() {
             The Solution
           </h2>
           <p className="leading-relaxed">
-            SmallPrintAI was born from a simple mission: to democratize legal
+            SmallPrintsAI was born from a simple mission: to democratize legal
             clarity. We built a professional-grade AI layer that speaks your
             language. Our system doesn&apos;t just summarize; it protects. By
             analyzing thousands of data points across your PDF or DOCX files, we

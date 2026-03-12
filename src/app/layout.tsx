@@ -33,7 +33,7 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "SmallPrintAI — Understand the small print before you sign",
+  title: "SmallPrintsAI — Understand the small print before you sign",
   description:
     "Analyze contracts and documents for key terms, dates, and obligations. Legal clarity in minutes.",
 };

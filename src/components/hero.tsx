@@ -18,7 +18,7 @@ const item = {
 };
 
 /**
- * Hero section for SmallPrintAI landing: headline, subline, CTA.
+ * Hero section for SmallPrintsAI landing: headline, subline, CTA.
  */
 export function Hero() {
   return (
@@ -46,7 +46,7 @@ export function Hero() {
         variants={item}
         className="mx-auto mt-4 max-w-2xl text-lg text-[var(--muted-foreground)] sm:text-xl"
       >
-        SmallPrintAI analyzes contracts and documents to surface key terms,
+        SmallPrintsAI analyzes contracts and documents to surface key terms,
         dates, and obligations—so you can make informed decisions with
         confidence.
       </motion.p>

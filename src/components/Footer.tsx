@@ -24,7 +24,7 @@ const footerLinks = {
 };
 
 /**
- * SmallPrintAI Footer: brand, Product/Company/Support links, social placeholders, copyright.
+ * SmallPrintsAI Footer: brand, Product/Company/Support links, social placeholders, copyright.
  */
 export function Footer() {
   return (
@@ -37,7 +37,7 @@ export function Footer() {
               href="/"
               className="text-2xl font-serif font-bold text-slate-900"
             >
-              SmallPrint AI
+              SmallPrintsAI
             </Link>
             <p className="mt-4 text-slate-500 max-w-xs leading-relaxed">
               Empowering professionals with AI-driven legal clarity. We make the
@@ -91,11 +91,11 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-slate-400 text-xs italic">
-            © 2026 SmallPrint AI. Making the fine print legible since 2026.
+            © 2026 SmallPrintsAI. Making the fine print legible since 2026.
           </p>
           <div className="flex items-center gap-2 text-xs text-slate-400 font-medium">
             <Mail className="h-3 w-3" aria-hidden />
-            hello@smallprint.ai
+            hello@smallprintsai.com
           </div>
         </div>
       </div>

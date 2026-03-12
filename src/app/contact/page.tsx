@@ -3,9 +3,9 @@ import { ArrowLeft, Mail, MessageSquare, HelpCircle } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 
 export const metadata = {
-  title: "Contact Support — SmallPrintAI",
+  title: "Contact Support — SmallPrintsAI",
   description:
-    "Get in touch with SmallPrintAI support. Questions, feedback, or help with legal document analysis.",
+    "Get in touch with SmallPrintsAI support. Questions, feedback, or help with legal document analysis.",
 };
 
 export default function ContactPage() {
@@ -43,10 +43,10 @@ export default function ContactPage() {
                   For account, billing, or technical issues, email us and we&apos;ll respond as soon as we can.
                 </p>
                 <a
-                  href="mailto:support@smallprintai.com"
+                  href="mailto:support@smallprintsai.com"
                   className="mt-3 inline-block text-sm font-medium text-[var(--primary)] hover:underline"
                 >
-                  support@smallprintai.com
+                  support@smallprintsai.com
                 </a>
               </div>
             </div>
@@ -62,7 +62,7 @@ export default function ContactPage() {
                   Feedback &amp; feature requests
                 </h2>
                 <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-                  We&apos;d love to hear how we can improve SmallPrintAI. Send suggestions to the same email above with the subject &quot;Feedback&quot;.
+                  We&apos;d love to hear how we can improve SmallPrintsAI. Send suggestions to the same email above with the subject &quot;Feedback&quot;.
                 </p>
               </div>
             </div>

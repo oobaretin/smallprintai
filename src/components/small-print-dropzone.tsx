@@ -25,7 +25,7 @@ export interface SmallPrintDropzoneProps {
 }
 
 /**
- * SmallPrintAI dropzone: react-dropzone + "Lightning Fast" progress bar.
+ * SmallPrintsAI dropzone: react-dropzone + "Lightning Fast" progress bar.
  * On drop, calls analyzeDocument server action; on completion, passes extracted text
  * so the parent can run AI analysis and display RiskAssessmentCards.
  */

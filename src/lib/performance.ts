@@ -2,7 +2,7 @@
  * Performance monitoring for AI analysis: logs time-to-complete to console for real-time analytics.
  */
 
-const PREFIX = "[SmallPrintAI]";
+const PREFIX = "[SmallPrintsAI]";
 
 export function logAnalysisStart(): number {
   const start = performance.now();

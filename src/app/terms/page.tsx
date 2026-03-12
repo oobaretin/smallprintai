@@ -9,9 +9,9 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata = {
-  title: "Terms of Service — SmallPrintAI",
+  title: "Terms of Service — SmallPrintsAI",
   description:
-    "Terms of Service for SmallPrintAI. Use of our AI-powered legal document analysis tool.",
+    "Terms of Service for SmallPrintsAI. Use of our AI-powered legal document analysis tool.",
 };
 
 const LAST_UPDATED = "January 30, 2026";
@@ -35,7 +35,7 @@ export default function TermsPage() {
         </div>
 
         <h1 className="font-sans text-3xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl">
-          SmallPrintAI Terms of Service
+          SmallPrintsAI Terms of Service
         </h1>
         <p className="mt-2 font-sans text-sm text-[var(--muted-foreground)]">
           Effective Date: {LAST_UPDATED}
@@ -47,7 +47,7 @@ export default function TermsPage() {
               1. Acceptance of Terms
             </h2>
             <p className="leading-relaxed text-[var(--muted-foreground)]">
-              By accessing or using SmallPrintAI (&quot;Service&quot;), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service. We may update these terms from time to time; continued use after changes constitutes acceptance.
+              By accessing or using SmallPrintsAI (&quot;Service&quot;), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service. We may update these terms from time to time; continued use after changes constitutes acceptance.
             </p>
           </section>
 
@@ -56,7 +56,7 @@ export default function TermsPage() {
               2. Description of Service
             </h2>
             <p className="leading-relaxed text-[var(--muted-foreground)]">
-              SmallPrintAI provides AI-powered analysis of legal documents (e.g., PDFs and DOCX files), including risk assessments, summaries, and negotiation guidance. The Service is for informational and decision-support purposes only and does not constitute legal advice.
+              SmallPrintsAI provides AI-powered analysis of legal documents (e.g., PDFs and DOCX files), including risk assessments, summaries, and negotiation guidance. The Service is for informational and decision-support purposes only and does not constitute legal advice.
             </p>
           </section>
 
@@ -82,7 +82,7 @@ export default function TermsPage() {
               4. No Legal Advice
             </h2>
             <p className="leading-relaxed text-[var(--muted-foreground)]">
-              SmallPrintAI does not provide legal, tax, or professional advice. Our outputs are guidance only. You should consult a qualified professional for decisions that have legal or financial consequences.
+              SmallPrintsAI does not provide legal, tax, or professional advice. Our outputs are guidance only. You should consult a qualified professional for decisions that have legal or financial consequences.
             </p>
           </section>
 
@@ -104,7 +104,7 @@ export default function TermsPage() {
               6. Limitation of Liability
             </h2>
             <p className="leading-relaxed text-[var(--muted-foreground)]">
-              To the maximum extent permitted by law, SmallPrintAI and its affiliates shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount you paid us in the twelve months preceding the claim.
+              To the maximum extent permitted by law, SmallPrintsAI and its affiliates shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service. Our total liability shall not exceed the amount you paid us in the twelve months preceding the claim.
             </p>
           </section>
 

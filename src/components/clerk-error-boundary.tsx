@@ -29,7 +29,7 @@ export class ClerkErrorBoundary extends Component<Props, State> {
       error?.message?.toLowerCase().includes("not valid")
     ) {
       console.warn(
-        "[SmallPrintAI] Clerk key invalid or misconfigured. Using static Sign In / Get Started. Check NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY in .env.local."
+        "[SmallPrintsAI] Clerk key invalid or misconfigured. Using static Sign In / Get Started. Check NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY in .env.local."
       );
     }
   }

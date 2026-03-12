@@ -9,9 +9,9 @@ const sourceSerif = Source_Serif_4({
 });
 
 export const metadata = {
-  title: "Privacy Policy — SmallPrintAI",
+  title: "Privacy Policy — SmallPrintsAI",
   description:
-    "How SmallPrintAI handles your documents and data. Ephemeral analysis, no long-term storage, TLS encryption.",
+    "How SmallPrintsAI handles your documents and data. Ephemeral analysis, no long-term storage, TLS encryption.",
 };
 
 const LAST_UPDATED = "January 30, 2026";
@@ -35,7 +35,7 @@ export default function PrivacyPage() {
         </div>
 
         <h1 className="font-sans text-3xl font-bold tracking-tight text-[var(--foreground)] sm:text-4xl">
-          SmallPrintAI Privacy Policy
+          SmallPrintsAI Privacy Policy
         </h1>
         <p className="mt-2 font-sans text-sm text-[var(--muted-foreground)]">
           Effective Date: {LAST_UPDATED}
@@ -47,7 +47,7 @@ export default function PrivacyPage() {
               1. Our Commitment to Your Privacy
             </h2>
             <p className="leading-relaxed text-[var(--muted-foreground)]">
-              At SmallPrintAI, we believe that your legal documents are your
+              At SmallPrintsAI, we believe that your legal documents are your
               business—not ours. We have designed our &quot;Professional-grade
               AI&quot; infrastructure to minimize data footprint and maximize
               security.
@@ -103,7 +103,7 @@ export default function PrivacyPage() {
                 <strong className="text-[var(--foreground)]">
                   Human-in-the-Loop:
                 </strong>{" "}
-                SmallPrintAI provides automated analysis. We encourage all users
+                SmallPrintsAI provides automated analysis. We encourage all users
                 to treat our &quot;Risk Assessments&quot; as guidance, not
                 formal legal advice.
               </li>
