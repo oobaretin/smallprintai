@@ -240,7 +240,7 @@ export async function extractDocumentText(
       return {
         text: "",
         error:
-          "Could not extract text from this document. Try PDF or paste the text.",
+          "Could not extract text from this document. Try PDF or paste text.",
       };
     }
     return { text: text.trim() };
