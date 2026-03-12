@@ -8,11 +8,24 @@ import OfficeParser from "officeparser";
 import { z } from "zod";
 import { LEGAL_ANALYZER_PROMPT } from "@/lib/prompts";
 
-const require = createRequire(import.meta.url);
-
 const anthropic = createAnthropic({
   apiKey: process.env.ANTHROPIC_API_KEY ?? "",
 });
+
+type PdfParseMod = { PDFParse: new (opts: { data: Uint8Array }) => { getText(): Promise<{ text?: string }>; destroy(): Promise<void> } };
+let _pdfParse: PdfParseMod | null | undefined = undefined;
+
+/** Lazy require for pdf-parse; only runs when first parsing a PDF to avoid load-time crash on Vercel. */
+function getPdfParse(): PdfParseMod | null {
+  if (_pdfParse !== undefined) return _pdfParse;
+  try {
+    const req = createRequire(import.meta.url);
+    _pdfParse = req("pdf-parse") as PdfParseMod;
+  } catch {
+    _pdfParse = null;
+  }
+  return _pdfParse;
+}
 
 /**
  * Extracts text from a PDF buffer. Uses require("pdf-parse") for stable server load (avoids ESM/dynamic-import crash).
@@ -20,8 +33,9 @@ const anthropic = createAnthropic({
  */
 async function extractTextFromPdf(buffer: Buffer): Promise<string> {
   try {
-    const { PDFParse } = require("pdf-parse") as { PDFParse: new (opts: { data: Uint8Array }) => { getText(): Promise<{ text?: string }>; destroy(): Promise<void> } };
-    const parser = new PDFParse({ data: new Uint8Array(buffer) });
+    const mod = getPdfParse();
+    if (!mod?.PDFParse) return "";
+    const parser = new mod.PDFParse({ data: new Uint8Array(buffer) });
     const result = await parser.getText();
     await parser.destroy();
     return result?.text ?? "";
